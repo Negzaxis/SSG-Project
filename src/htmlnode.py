@@ -1,5 +1,5 @@
 
-
+from textnode import TextNode, TextType
 
 
 
@@ -42,5 +42,34 @@ class LeafNode(HTMLNode):
         return f"<{self.tag}{self.props_to_html()}>{self.value}</{self.tag}>"
     
 
-        
+class ParentNode(HTMLNode):
+
+    def __init__ (self, tag, children, props=None):
+        super().__init__(tag=tag, children=children, props=props)
     
+    def to_html(self):
+        if self.tag is None:
+            raise ValueError("ParentNode must have a tag")
+        if self.children is None:
+            raise ValueError("ParentNode must have children")
+        html = f"<{self.tag}>"
+        for child in self.children:
+            html += child.to_html()
+        html += f"</{self.tag}>"
+        return html
+
+
+def text_node_to_html_node(text_node):
+    if text_node.text_type == TextType.NORMAL_TEXT:
+        return LeafNode(None, text_node.text)
+    if text_node.text_type == TextType.BOLD_TEXT:
+        return LeafNode("b", text_node.text)
+    if text_node.text_type == TextType.ITALIC_TEXT:
+        return LeafNode("i", text_node.text)
+    if text_node.text_type == TextType.CODE_TEXT:
+        return LeafNode("code", text_node.text)
+    if text_node.text_type == TextType.LINK:
+        return LeafNode("a", text_node.text, {"href": text_node.url})
+    if text_node.text_type == TextType.IMAGE:
+        return LeafNode("img", "", {"src": text_node.url, "alt": text_node.text})
+    raise ValueError(f"invalid text type: {text_node.text_type}")
