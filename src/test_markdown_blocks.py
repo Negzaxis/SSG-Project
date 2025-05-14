@@ -4,7 +4,8 @@ import unittest
 from markdown_blocks import (
     markdown_to_html_node,
     markdown_to_blocks, 
-    block_to_block_type, 
+    block_to_block_type,
+    extract_title, 
     BlockType
 )
 
@@ -164,6 +165,35 @@ the **same** even with inline stuff
             html,
             "<div><pre><code>This is text that _should_ remain\nthe **same** even with inline stuff\n</code></pre></div>",
         )
+
+class TestExtractTitle(unittest.TestCase):
+    def test_basic_title(self):
+        markdown = "# Simple Title"
+        self.assertEqual(extract_title(markdown), "Simple Title")
+    
+    def test_title_with_extra_whitespae(self):
+        markdown = "#   Title with spaces   "
+        self.assertEqual(extract_title(markdown), "Title with spaces")
+
+    def test_multiline_with_title(self):
+        markdown = """# Main Title
+        
+        Some paragraph text.
+        
+        ## Subtitle
+        More text here.
+        """
+        self.assertEqual(extract_title(markdown), "Main Title")
+    
+    def test_no_title_raises_exception(self):
+        markdown = """No title here
+        
+        Just some text.
+        
+        ## This is a subtitle, not a title
+        """
+        with self.assertRaises(Exception):
+            extract_title(markdown)
 
 if __name__ == "__main__":
     unittest.main()

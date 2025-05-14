@@ -1,6 +1,7 @@
 from textnode import TextNode, TextType
 import os
 import shutil
+from page_generator import *
 
 def copy_static(source_dir, dest_dir):
     if os.path.exists(dest_dir):
@@ -25,6 +26,11 @@ def copy_static(source_dir, dest_dir):
 def main():
     copy_static("static", "public")
 
+    generate_page(
+        from_path="content/index.md",
+        template_path="template.html",
+        dest_path="public/index.html"
+    )
 
 
 
