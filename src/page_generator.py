@@ -4,7 +4,7 @@ from markdown_blocks import *
 from pathlib import Path
 
 
-def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+def generate_pages_recursive(basepath, dir_path_content, template_path, dest_dir_path):
     for filename in os.listdir(dir_path_content):
         from_path = os.path.join(dir_path_content, filename)
         dest_path = os.path.join(dest_dir_path, filename)
@@ -16,7 +16,7 @@ def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
 
 
 
-def generate_page(from_path, template_path, dest_path):
+def generate_page(basepath, from_path, template_path, dest_path):
     """
     Generate an HTML page from a markdown file using a template.
     
@@ -41,6 +41,8 @@ def generate_page(from_path, template_path, dest_path):
 
     full_html = template_content.replace("{{ Title }}", title)
     full_html = full_html.replace("{{ Content }}", html_content)
+    full_html = full_html.replace('href="/', f'href="{basepath}')
+    full_html = full_html.replace('src="/', f'src="{basepath}')
 
     dest_dir = os.path.dirname(dest_path)
     if dest_dir:
