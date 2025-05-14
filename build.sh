@@ -1,2 +1,2 @@
 #!/bin/bash
-python3 src/main.py "/SSG-Project
+python3 src/main.py "/SSG-Project/"
